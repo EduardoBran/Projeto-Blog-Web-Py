@@ -8,22 +8,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+                {% for categoria in categorias %}
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Tecnologia</a>
+                    <a class="nav-link" href="{% url 'post_categoria' categoria.nome_cat %}">
+                        {{ categoria.nome_cat }}
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Notícia</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Curiosidade</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Segurança</a>
-                </li>
+                {% endfor %}
             </ul>
-            <form class="form-inline my-2 my-lg-0 ml-lg-4" action="/busca/">
-                <input name="termo" value="" class="form-control mr-sm-2" type="search" placeholder="Pesquisar"
-                       aria-label="Search">
+            <form class="form-inline my-2 my-lg-0 ml-lg-4" action="{% url 'post_busca' %}">
+                <input name="termo" value="{{ request.GET.termo }}" class="form-control mr-sm-2"
+                       type="search" placeholder="Pesquisar" aria-label="Search">
             </form>
         </div>
     </div>
