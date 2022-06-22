@@ -27,8 +27,9 @@
                 <small class="text-muted">
                     {{ post.data_post|naturalday|title }}
                     |
-                    {{ post.comentario_set.count }} comentário(s)
-                    | {{ post.categoria_post }}</small>
+                    {{ post.numero_comentarios }} comentário(s)
+                    |
+                    {{ post.categoria_post }}</small>
             </p>
 
             <div class="text-right">
