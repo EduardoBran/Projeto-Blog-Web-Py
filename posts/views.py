@@ -14,6 +14,7 @@ class PostIndex(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.order_by('-id').filter(publicado_post=True)
+        qs = qs.order_by('-id')
         qs = qs.annotate(
             numero_comentarios=Count(
                 Case(
