@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
+from django.db.models import Q, Count, Case, When
+from django.contrib import messages
 
 from categorias.models import Categoria
 from posts.models import Post
-from django.db.models import Q, Count, Case, When
+from comentarios.forms import FormComentario
+from comentarios.models import Comentario
 
 
 class PostIndex(ListView):
@@ -20,8 +23,7 @@ class PostIndex(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.order_by('-id').filter(publicado_post=True)
-        qs = qs.order_by('-id')
+        qs = qs.order_by('-data_post').filter(publicado_post=True)
         qs = qs.annotate(
             numero_comentarios=Count(
                 Case(
@@ -43,7 +45,6 @@ class PostBusca(PostIndex):
             return qs
 
         # filtrando a busca
-
         qs = qs.filter(
             Q(titulo_post__icontains=termo) |
             Q(autor_post__first_name__iexact=termo) |
@@ -51,8 +52,6 @@ class PostBusca(PostIndex):
             Q(excerto_post__icontains=termo) |
             Q(categoria_post__nome_cat__iexact=termo)
         )
-
-
         return qs
 
 
@@ -74,4 +73,19 @@ class PostCategoria(PostIndex):
 
 
 class PostDetalhes(UpdateView):
-    pass
+    template_name = 'posts/post_detalhes.html'
+    model = Post
+    form_class = FormComentario
+    context_object_name = 'post'
+
+    def form_valid(self, form):
+        post = self.get_object()  # post atual
+        comentario = Comentario(**form.cleaned_data)
+        comentario.post_comentario = post
+
+        if self.request.user.is_authenticated:
+            comentario.usuario_comentario = self.request.user
+
+        comentario.save()
+        messages.success(self.request, 'Comentário enviado com sucesso.')
+        return redirect('post_detalhes', pk=post.id)
