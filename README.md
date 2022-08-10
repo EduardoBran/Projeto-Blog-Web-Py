@@ -1,5 +1,5 @@
 # App Blog
-Este repositório trata-se de um blog sobre tecnologia feito com Pythone e Django.
+Este repositório trata-se de um blog sobre tecnologia feito utilizando Python e Django.
 
 # APRESENTACAO
 Construir uma aplicação web para que o usuário seja capaz de:
